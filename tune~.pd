@@ -615,7 +615,7 @@ f 10;
 #X obj 188 40 inlet~;
 #X obj 308 40 inlet~;
 #X text 526 234 William Brent \, March 2018;
-#X text 526 214 [tune~] version 0.0.3;
+#X text 526 214 [tune~] version 0.1;
 #X connect 1 0 6 0;
 #X connect 3 0 1 0;
 #X connect 4 0 3 0;
