@@ -1,3 +1,3 @@
 # tune_tilde
 
-[tune~] is a Pure Data object that tunes an input signal to any desired MIDI pitch while keeping formant structure relatively intact. It is an adaptation of the built-in Pure Data documentation patch I10.phase.bash.pd. While the original patch has separate analysis and playback stages, [tune~] is designed for real-time pitch correction.
+[tune~] is a Pure Data vanilla abstraction that performs polyphonic real-time tuning of a live input signal to any desired MIDI pitch while keeping the spectral envelope relatively intact. It uses an adaptation of the technique demonstrated in Pd's I10.phase.bash.pd documentation patch.
