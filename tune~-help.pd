@@ -1,10 +1,142 @@
-#N canvas 209 207 804 563 10;
-#X obj 48 32 adc~;
-#X obj 48 56 *~;
-#X obj 88 56 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1
+#N canvas 370 259 816 518 10;
+#N canvas 139 389 360 374 output 0;
+#X obj 140 277 *~;
+#X obj 141 316 dac~;
+#X floatatom 30 118 5 0 148 1 dB - -;
+#X obj 30 165 dbtorms;
+#X obj 30 187 pack f 40;
+#X obj 30 209 line~;
+#X obj 179 176 inlet~;
+#X obj 30 36 loadbang;
+#X msg 30 57 90;
+#X obj 210 277 *~;
+#X obj 249 176 inlet~;
+#X connect 0 0 1 0;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 4 0 5 0;
+#X connect 5 0 0 0;
+#X connect 5 0 9 0;
+#X connect 6 0 0 1;
+#X connect 7 0 8 0;
+#X connect 8 0 2 0;
+#X connect 9 0 1 1;
+#X connect 10 0 9 1;
+#X coords 0 -1 1 1 100 40 1 20 100;
+#X restore 46 440 pd output;
+#N canvas 889 140 714 594 other-commands 0;
+#X msg 37 57 window-size \$1;
+#X floatatom 87 107 5 0 0 1 ms - -;
+#X msg 87 127 buf-read-delay \$1;
+#X obj 37 538 outlet;
+#X floatatom 147 307 5 0 0 1 Hz - -;
+#X msg 147 327 hi-pass-cutoff \$1;
+#X floatatom 117 197 5 0 0 0 - - -;
+#X msg 117 217 num-buf-blocks \$1;
+#X text 299 303 A high-pass filter is included just before output since
+there can be a strong DC component in the processed result. Default
+cutoff is at 10Hz.;
+#X floatatom 177 387 5 0 0 1 ms - -;
+#X msg 177 407 pitch-ramp-time \$1;
+#X floatatom 177 457 5 0 0 1 ms - -;
+#X msg 177 477 spec-shift-ramp-time \$1;
+#X text 299 63 "buf-read-delay" sets how far the playhead lags behind
+the record head in the circular buffer. The larger the read delay \,
+the more latency you will experience. By default \, the read delay
+is set to a quarter of the duration of the buffer. If you reduce the
+delay too much \, you will start hearing artifacts as the window being
+read and output involves part of the buffer where signal is actively
+being updated \, causing clicks and distortion.;
+#X text 299 183 Together \, "num-buf-blocks" and "window-size" determine
+the circular buffer size in samples. Its size is calculated as num-buf-blocks*(window-size/2).
+Generally \, you should keep the circular buffer on the small side
+\, since [tabread4~] objects are used to scan through it \, and the
+lookup precision of [tabread4~] is limited. If you open the [tune~]
+abstraction \, a parameter display panel shows the current size of
+the circular buffer in samples and seconds.;
+#X text 339 423 Changes to the "pitch" and "spec-shift" parameters
+are ramped using [line~] objects inside of [tune~]. These commands
+change the ramp times for all voices globally.;
+#X msg 37 27 512;
+#X msg 77 27 1024;
+#X msg 127 27 2048;
+#X msg 177 27 4096;
+#X text 35 9 Allowed window sizes:;
+#X connect 0 0 3 0;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 4 0 5 0;
+#X connect 5 0 3 0;
+#X connect 6 0 7 0;
+#X connect 7 0 3 0;
+#X connect 9 0 10 0;
+#X connect 10 0 3 0;
+#X connect 11 0 12 0;
+#X connect 12 0 3 0;
+#X connect 16 0 0 0;
+#X connect 17 0 0 0;
+#X connect 18 0 0 0;
+#X connect 19 0 0 0;
+#X restore 235 333 pd other-commands;
+#N canvas 669 354 718 614 basic-commands 0;
+#X obj 42 548 outlet;
+#X msg 132 224 pan 0 \$1;
+#X msg 162 274 vib-speed 0 \$1;
+#X floatatom 162 254 5 0 10 1 Hz - -;
+#X msg 192 324 vib-depth 0 \$1;
+#X floatatom 192 304 5 0 500 1 cents - -;
+#X msg 102 174 amp 0 \$1;
+#X floatatom 102 154 5 0 112 1 dB - -;
+#X floatatom 132 204 5 -100 100 0 - - -;
+#X floatatom 42 54 5 0 0 1 MIDI - -;
+#X obj 271 453 loadbang;
+#X floatatom 72 104 5 0 0 0 - - -;
+#X msg 72 124 spec-shift 0 \$1;
+#X msg 271 483 amp 0 100 \, pan 0 0 \, pitch 0 57 \, spec-shift 0;
+#X text 268 519 This initialization message sets up some basics for
+using voice 0 so that the help patch can produce sound at startup.
 ;
-#X obj 125 100 readsf~;
-#X floatatom 152 197 5 0 127 1 pitch-MIDI - -, f 5;
+#X msg 42 74 pitch 0 \$1;
+#X text 258 88 "pitch" is specified as a MIDI note number \, and will
+force the input signal to the given pitch., f 64;
+#X text 258 178 "amp" sets the volume of the given voice in dB (where
+unity is 100dB \, in keeping with Pd conventions)., f 64;
+#X text 308 288 Vibrato speed and depth can be specified for each voice.
+To disable vibrato \, set the speed to 0Hz., f 50;
+#X text 258 18 Since [tune~] is polyphonic \, changing any of these
+parameters requires a voice ID (starting at voice 0). The syntax is:
+<parameter> <voice ID> <value>. For simplicity \, we'll just use voice
+0 in a monophonic context here., f 64;
+#X msg 222 354 unity-all;
+#X msg 252 383 mute-all \$1;
+#X obj 232 383 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 378 350 Sometimes it's convenient to be able to mute all voices
+or set all voices to unity gain at once. For individual control \,
+see the [pd dealing-with-polyphony] subpatch., f 42;
+#X text 258 128 "spec-shift" slides the spectral envelope upwards or
+downwards in hundredths of an octave \, creating timbre variations
+from dark to bright., f 64;
+#X text 258 218 "pan" positions the given voice in the stereo field
+between hard left (-100) and hard right (+100)., f 64;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 2 0;
+#X connect 4 0 0 0;
+#X connect 5 0 4 0;
+#X connect 6 0 0 0;
+#X connect 7 0 6 0;
+#X connect 8 0 1 0;
+#X connect 9 0 15 0;
+#X connect 10 0 13 0;
+#X connect 11 0 12 0;
+#X connect 12 0 0 0;
+#X connect 13 0 0 0;
+#X connect 15 0 0 0;
+#X connect 20 0 0 0;
+#X connect 21 0 0 0;
+#X connect 22 0 21 0;
+#X restore 175 273 pd basic-commands;
 #N canvas 160 330 516 475 pitch-track 0;
 #X obj 253 280 + 0.5;
 #X obj 253 304 i;
@@ -42,110 +174,184 @@
 #X connect 16 0 17 0;
 #X connect 17 0 13 0;
 #X coords 0 475 1 474 130 30 0;
-#X restore 48 155 pd pitch-track;
-#X obj 148 155 tgl 15 0 empty empty on/off 17 7 0 12 -262144 -1 -1
+#X restore 47 185 pd pitch-track;
+#X obj 147 185 tgl 15 0 empty empty on/off 17 7 0 12 -262144 -1 -1
 0 1;
-#N canvas 690 104 714 447 other-commands 0;
-#X floatatom 37 37 5 0 0 0 - - -, f 5;
-#X msg 37 57 window-size \$1;
-#X floatatom 87 107 5 0 0 0 - - -, f 5;
-#X msg 87 127 buf-read-delay \$1;
-#X obj 37 378 outlet;
-#X floatatom 147 307 5 0 0 0 - - -, f 5;
-#X msg 147 327 hi-pass-cutoff \$1;
-#X floatatom 117 197 5 0 0 0 - - -, f 5;
-#X msg 117 217 num-buf-blocks \$1;
-#X text 35 9 Allowed window sizes: 512 \, 1024 \, 2048 \, 4096;
-#X text 299 313 A high-pass filter is included just before output since
-there can be a strong DC component in the processed result. Default
-cutoff is at 10Hz.;
-#X text 299 183 The circular buffer size depends on the number of blocks
-in the buffer \, and the window size. It is best to keep the circular
-buffer on the small side \, since [tabread4~] objects are used to scan
-through it \, and the lookup precision of [tabread4~] is limited. I
-recommend keeping the buffer size to less than 10 \, 0 samples. It
-is calculated as num-buf-blocks*(window-size/2). If you open the [tune~]
-abstraction \, a parameter display panel will shows the current size
-of the circular buffer in samples and seconds.;
-#X text 299 73 The buffer read delay sets how far the playhead lags
-behind the record head in the circular buffer. The larger the read
-delay \, the more latency you will experience. By default \, the read
-delay is set to a quarter of the duration of the buffer. If you reduce
-the delay too much \, you will start hearing artifacts as the window
-being read and output involves part of the buffer where signal is actively
-being updated \, causing clicks and distortion.;
-#X connect 0 0 1 0;
-#X connect 1 0 4 0;
-#X connect 2 0 3 0;
-#X connect 3 0 4 0;
-#X connect 5 0 6 0;
-#X connect 6 0 4 0;
-#X connect 7 0 8 0;
-#X connect 8 0 4 0;
-#X restore 397 316 pd other-commands;
-#X floatatom 264 249 10 0 0 1 spectrum-shift - -, f 10;
-#X obj 264 300 line~;
-#X obj 152 258 line~;
-#X obj 264 279 pack f 100;
-#X text 226 403 Inlet 1: input signal;
-#X text 226 463 Inlet 4: control messages;
-#X text 226 443 Inlet 3: spectrum shift;
-#X text 226 423 Inlet 2: pitch (MIDI);
-#X obj 152 237 pack f 20;
-#X msg 145 76 open ../doc/sound/voice.wav \, start;
-#X text 575 507 William Brent \, March 2018;
-#X obj 24 370 cnv 15 175 60 empty empty empty 20 12 0 14 -233017 -66577
-0;
-#X obj 48 393 tune~, f 12;
-#X text 398 41 [tune~] is an adaptation of the built-in Pd documentation
-patch I10.phase.bash.pd. The original patch has separate analysis and
-playback stages \, while [tune~] is designed for real-time pitch shifting.
+#X text 639 457 [tune~] version 0.2;
+#X text 639 477 William Brent \, May 2021;
+#X text 134 373 creation argument sets the number of polyphonic voices
+, f 29;
+#X text 417 121 Pitch adjustments sound best on stable pitched tones
+\, but you can get interesting results tuning regular speech too (though
+often with strong artifacts). Try activating pitch tracking at left
+when playing the speech samples. Whatever momentary pitches occur during
+vowel sounds are forced to a grid of minor thirds. Pitch tracking the
+oboe sample won't do much - since it's a single stable tone \, its
+pitch will just be forced to the nearest MIDI note on the grid and
+stay there.;
+#X obj 48 32 adc~;
+#X obj 48 56 *~;
+#X obj 88 56 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1
 ;
-#X text 397 101 The phase-bashing technique employed allows for tuning
-of input signals to any desired MIDI pitch while keeping the spectral
-envelope relatively intact. Pitch adjustments sound best on stable
-pitched tones \, but you can get interesting results tuning regular
-speech too (though often with strong artifacts). Try activating pitch
-tracking at left when playing the speech samples. Whatever transient
-pitches occur during vowel sounds are forced to a grid of minor thirds.
-Pitch tracking the oboe sample won't do much - since it's a single
-stable tone \, its pitch will just be forced to the nearest MIDI note
-on the grid and stay there.;
+#X obj 125 110 readsf~;
+#X msg 145 76 open ../doc/sound/voice.wav \, start;
 #X msg 125 36 open ./audio/deutsch.wav \, start;
 #X msg 135 56 open ./audio/oboe-D62.wav \, start;
-#N canvas 4 23 592 473 output 0;
-#X obj 370 277 *~;
-#X obj 362 306 dac~;
-#X floatatom 110 118 5 0 148 1 dB - -, f 5;
-#X obj 380 195 dbtorms;
-#X obj 380 217 pack f 40;
-#X obj 380 239 line~;
-#X obj 306 126 inlet~;
-#X connect 0 0 1 0;
-#X connect 0 0 1 1;
+#X msg 136 221 pitch 0 \$1;
+#N canvas 502 334 1043 595 dealing-with-polyphony 0;
+#X obj 42 538 outlet;
+#X obj 192 193 pack f f;
+#X floatatom 192 114 5 0 0 1 spec-shift - -;
+#X obj 192 136 t b f;
+#X obj 192 159 f;
+#X msg 473 377 pitch 0 57 \, pitch 1 60 \, pitch 2 64 \, pitch 3 67
+\, amp 0 100 \, amp 1 98 \, amp 2 96 \, amp 3 94 \, pan 0 -75 \, pan
+1 -50 \, pan 2 50 \, pan 3 75 \, vib-speed 0 0 \, vib-speed 1 0 \,
+vib-speed 2 5 \, vib-speed 3 6 \, vib-depth 2 10 \, vib-depth 3 20
+;
+#X text 470 443 Here's a composed message that creates a minor 7th
+chord spread across the stereo field. Notice that the upper voices
+have some vibrato.;
+#X obj 372 193 pack f f;
+#X floatatom 372 114 5 0 112 1 amp - -;
+#X obj 372 136 t b f;
+#X obj 372 159 f;
+#X obj 372 216 list prepend amp;
+#X obj 42 193 pack f f;
+#X floatatom 42 114 5 21 108 1 pitch - -;
+#X obj 42 136 t b f;
+#X obj 42 159 f;
+#X obj 42 216 list prepend pitch;
+#X obj 42 279 list trim;
+#X obj 192 216 list prepend spec-shift;
+#X obj 662 193 pack f f;
+#X floatatom 662 114 5 0 10 1 vib-speed - -;
+#X obj 662 136 t b f;
+#X obj 662 159 f;
+#X obj 842 193 pack f f;
+#X floatatom 842 114 5 0 500 1 vib-depth - -;
+#X obj 842 136 t b f;
+#X obj 842 159 f;
+#X obj 512 193 pack f f;
+#X floatatom 512 114 5 -100 100 1 pan - -;
+#X obj 512 136 t b f;
+#X obj 512 159 f;
+#X obj 512 216 list prepend pan;
+#X obj 662 216 list prepend vib-speed;
+#X obj 842 216 list prepend vib-depth;
+#X obj 72 159 r \$0-voice-ID;
+#X obj 222 159 r \$0-voice-ID;
+#X obj 402 159 r \$0-voice-ID;
+#X obj 542 159 r \$0-voice-ID;
+#X obj 692 159 r \$0-voice-ID;
+#X obj 872 159 r \$0-voice-ID;
+#X obj 566 43 hradio 15 1 0 4 empty empty voice-ID 0 -8 0 10 -262144
+-1 -1 0;
+#X obj 566 63 s \$0-voice-ID;
+#X obj 153 363 pack f f;
+#X obj 153 306 t b f;
+#X obj 153 329 f;
+#X obj 183 329 r \$0-voice-ID;
+#X obj 153 286 tgl 15 0 empty empty mute 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 153 386 list prepend mute;
+#X obj 303 363 pack f f;
+#X obj 303 306 t b f;
+#X obj 303 329 f;
+#X obj 333 329 r \$0-voice-ID;
+#X obj 303 286 tgl 15 0 empty empty solo 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 303 386 list prepend solo;
+#X text 38 36 Here's one way to set up basic control of individual
+voices. Specify a voice ID using the radio buttons at right \, then
+adjust the desired parameter below., f 80;
+#X obj 153 429 list trim;
+#X connect 1 0 18 0;
 #X connect 2 0 3 0;
 #X connect 3 0 4 0;
-#X connect 4 0 5 0;
-#X connect 5 0 0 1;
-#X connect 6 0 0 0;
-#X coords 0 -1 1 1 100 40 1 100 100;
-#X restore 48 463 pd output;
-#X text 575 487 [tune~] version 0.1;
-#X connect 0 0 1 0;
-#X connect 1 0 5 0;
-#X connect 2 0 1 1;
-#X connect 3 0 5 0;
-#X connect 4 0 16 0;
-#X connect 5 0 20 0;
-#X connect 5 1 4 0;
-#X connect 6 0 5 1;
-#X connect 7 0 20 3;
-#X connect 8 0 11 0;
-#X connect 9 0 20 2;
-#X connect 10 0 20 1;
-#X connect 11 0 9 0;
-#X connect 16 0 10 0;
-#X connect 17 0 3 0;
-#X connect 20 0 25 0;
-#X connect 23 0 3 0;
-#X connect 24 0 3 0;
+#X connect 3 1 1 1;
+#X connect 4 0 1 0;
+#X connect 5 0 0 0;
+#X connect 7 0 11 0;
+#X connect 8 0 9 0;
+#X connect 9 0 10 0;
+#X connect 9 1 7 1;
+#X connect 10 0 7 0;
+#X connect 11 0 17 0;
+#X connect 12 0 16 0;
+#X connect 13 0 14 0;
+#X connect 14 0 15 0;
+#X connect 14 1 12 1;
+#X connect 15 0 12 0;
+#X connect 16 0 17 0;
+#X connect 17 0 0 0;
+#X connect 18 0 17 0;
+#X connect 19 0 32 0;
+#X connect 20 0 21 0;
+#X connect 21 0 22 0;
+#X connect 21 1 19 1;
+#X connect 22 0 19 0;
+#X connect 23 0 33 0;
+#X connect 24 0 25 0;
+#X connect 25 0 26 0;
+#X connect 25 1 23 1;
+#X connect 26 0 23 0;
+#X connect 27 0 31 0;
+#X connect 28 0 29 0;
+#X connect 29 0 30 0;
+#X connect 29 1 27 1;
+#X connect 30 0 27 0;
+#X connect 31 0 17 0;
+#X connect 32 0 17 0;
+#X connect 33 0 17 0;
+#X connect 34 0 15 1;
+#X connect 35 0 4 1;
+#X connect 36 0 10 1;
+#X connect 37 0 30 1;
+#X connect 38 0 22 1;
+#X connect 39 0 26 1;
+#X connect 40 0 41 0;
+#X connect 42 0 47 0;
+#X connect 43 0 44 0;
+#X connect 43 1 42 1;
+#X connect 44 0 42 0;
+#X connect 45 0 44 1;
+#X connect 46 0 43 0;
+#X connect 47 0 55 0;
+#X connect 48 0 53 0;
+#X connect 49 0 50 0;
+#X connect 49 1 48 1;
+#X connect 50 0 48 0;
+#X connect 51 0 50 1;
+#X connect 52 0 49 0;
+#X connect 53 0 55 0;
+#X connect 55 0 0 0;
+#X restore 205 303 pd dealing-with-polyphony;
+#X obj 46 380 tune~ 4;
+#X text 418 41 [tune~] performs polyphonic real-time tuning of a live
+input signal to any desired MIDI pitch while keeping the spectral envelope
+relatively intact. It uses an adaptation of the technique demonstrated
+in Pd's I10.phase.bash.pd documentation patch.;
+#X text 417 251 To keep CPU usage low \, polyphony is implemented such
+that the FFT analysis for phase-bashing is performed only once. The
+results are then used to process the resynthesis of as many voices
+as desired. One trade-off for the convenience of polyphony is that
+the spatialization scheme is hard-coded as stereo. However \, since
+[tune~] is a Pd vanilla abstraction \, it can be edited for use with
+any number of output channels.;
+#X connect 1 0 18 1;
+#X connect 2 0 18 1;
+#X connect 3 0 18 0;
+#X connect 3 1 16 0;
+#X connect 4 0 3 1;
+#X connect 9 0 10 0;
+#X connect 10 0 3 0;
+#X connect 11 0 10 1;
+#X connect 12 0 3 0;
+#X connect 13 0 12 0;
+#X connect 14 0 12 0;
+#X connect 15 0 12 0;
+#X connect 16 0 18 1;
+#X connect 17 0 18 1;
+#X connect 18 0 0 0;
+#X connect 18 1 0 1;
