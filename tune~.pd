@@ -4,17 +4,16 @@
 #X obj 375 71 inlet;
 #N canvas 751 274 882 643 command-parsing 0;
 #X obj 46 48 inlet;
-#X floatatom 610 175 10 0 0 1 buf-read-delay #0-buf-read-delay -;
-#X floatatom 610 194 10 0 0 1 buf-dur-sec #0-buf-dur-sec -;
-#X floatatom 610 214 10 0 0 1 buf-dur-samps #0-buf-dur-samps -;
+#X floatatom 610 175 10 0 0 1 buf-read-delay \$0-buf-read-delay - 0;
+#X floatatom 610 194 10 0 0 1 buf-dur-sec \$0-buf-dur-sec - 0;
+#X floatatom 610 214 10 0 0 1 buf-dur-samps \$0-buf-dur-samps - 0;
 #X obj 127 15 loadbang;
-#X floatatom 440 174 10 0 0 1 window-size #0-window-size -;
-#X floatatom 440 194 10 0 0 1 hop #0-hop -;
-#X floatatom 440 214 10 0 0 1 num-buf-blocks #0-num-buf-blocks -;
-#X floatatom 440 234 10 0 0 1 hi-pass-cutoff #0-hi-pass-cutoff -;
-#X floatatom 610 254 10 0 0 1 spec-shift-ramp #0-spec-shift-ramp-time
--;
-#X floatatom 440 254 10 0 0 1 pitch-ramp #0-pitch-ramp-time -;
+#X floatatom 440 174 10 0 0 1 window-size \$0-window-size - 0;
+#X floatatom 440 194 10 0 0 1 hop \$0-hop - 0;
+#X floatatom 440 214 10 0 0 1 num-buf-blocks \$0-num-buf-blocks - 0;
+#X floatatom 440 234 10 0 0 1 hi-pass-cutoff \$0-hi-pass-cutoff - 0;
+#X floatatom 610 254 10 0 0 1 spec-shift-ramp \$0-spec-shift-ramp-time - 0;
+#X floatatom 440 254 10 0 0 1 pitch-ramp \$0-pitch-ramp-time - 0;
 #N canvas 235 199 535 383 window-size 0;
 #X msg 259 178 tune~: requested window size not allowed;
 #X obj 259 199 print -n;
@@ -27,8 +26,7 @@
 #X msg 39 250 256;
 #X obj 39 331 s \$0-window-size;
 #X obj 39 29 inlet;
-#X text 272 37 need to special-case this one since we only want to
-allow certain window sizes, f 32;
+#X text 272 37 need to special-case this one since we only want to allow certain window sizes, f 32;
 #X connect 0 0 1 0;
 #X connect 2 0 0 0;
 #X connect 3 0 8 0;
@@ -53,9 +51,7 @@ allow certain window sizes, f 32;
 #X obj 44 167 list trim;
 #X obj 132 148 makefilename \$0-%s;
 #X obj 60 38 inlet;
-#X text 194 36 if there's no polyphonic voice number involved \, we
-can just prepend a \$0- in front of the message name and transmit globally.
-;
+#X text 194 36 if there's no polyphonic voice number involved \, we can just prepend a \$0- in front of the message name and transmit globally.;
 #X connect 0 0 1 0;
 #X connect 0 1 4 1;
 #X connect 1 0 4 0;
@@ -162,8 +158,7 @@ can just prepend a \$0- in front of the message name and transmit globally.
 #X connect 4 1 2 1;
 #X connect 5 0 1 0;
 #X restore 96 566 pd spec-shift;
-#X msg 127 55 window-size 1024 \, num-buf-blocks 9 \, hi-pass-cutoff
-10 \, pitch-ramp-time 10 \, spec-shift-ramp-time 50;
+#X msg 127 55 window-size 1024 \, num-buf-blocks 9 \, hi-pass-cutoff 10 \, pitch-ramp-time 10 \, spec-shift-ramp-time 50;
 #N canvas 1352 130 403 398 mute-all 0;
 #X obj 36 9 r \$0-mute-all;
 #X obj 36 154 until;
@@ -230,8 +225,7 @@ can just prepend a \$0- in front of the message name and transmit globally.
 #X obj 47 88 f \$1;
 #X obj 47 111 t f b;
 #X obj 47 23 r \$0-unity-all;
-#X obj 67 61 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
--1;
+#X obj 67 61 bng 15 250 50 0 empty empty empty 17 7 0 10 #fcfcfc #000000 #000000;
 #X obj 47 280 pack 100 f \$0;
 #X msg 47 303 \; \$3-\$2-amp \$1 \; \$3-amps \$2 \$1 \;;
 #X connect 0 0 1 0;
@@ -248,8 +242,7 @@ can just prepend a \$0- in front of the message name and transmit globally.
 #X connect 7 0 5 0;
 #X connect 9 0 10 0;
 #X restore 656 366 pd unity-all;
-#X obj 46 129 route pitch spec-shift amp pan vib-speed vib-depth mute
-solo window-size;
+#X obj 46 129 route pitch spec-shift amp pan vib-speed vib-depth mute solo window-size;
 #N canvas 514 335 375 293 mute 0;
 #X obj 37 37 inlet;
 #X obj 37 60 swap;
@@ -344,8 +337,8 @@ solo window-size;
 #X obj 56 141 ./lib/tuneBasher~ \$0;
 #X obj 56 195 clone ./lib/tuneReader~ \$1 \$0;
 #X obj 236 275 outlet~;
-#X text 511 80 William Brent \, May 2021;
-#X text 511 60 [tune~] version 0.2;
+#X text 511 60 [tune~] version 0.2.1;
+#X text 511 80 William Brent \, June 2024;
 #X connect 0 0 4 0;
 #X connect 2 0 3 0;
 #X connect 4 0 5 0;
