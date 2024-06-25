@@ -1,4 +1,4 @@
-#N canvas 843 217 436 234 10;
+#N canvas 843 217 436 234 12;
 #N canvas 120 120 375 395 hann-window 0;
 #X obj 89 236 osc~;
 #X obj 89 261 *~ -0.5;
@@ -33,8 +33,7 @@
 #X restore 247 84 pd hann-window;
 #N canvas 170 438 533 486 control-stuff 0;
 #X obj 32 113 / 2;
-#X text 34 16 analysis overlap was 2 so our block size is (window size)/2
-, f 31;
+#X text 34 16 analysis overlap was 2 so our block size is (window size)/2, f 31;
 #X obj 63 268 *;
 #X obj 121 333 /;
 #X obj 171 333 samplerate~;
@@ -49,8 +48,7 @@
 #X obj 32 143 s \$1-hop;
 #X obj 325 236 r \$1-buf-dur-sec;
 #X obj 124 209 r \$1-num-buf-blocks;
-#X msg 63 389 \; \$4-nophase-num-points-guarded \$1 \; \$4-nophase
-resize \$1 \; \$4-buf-dur-sec \$3 \; \$4-buf-dur-samps \$2 \;;
+#X msg 63 389 \; \$4-nophase-num-points-guarded \$1 \; \$4-nophase resize \$1 \; \$4-buf-dur-sec \$3 \; \$4-buf-dur-samps \$2 \;;
 #X obj 325 284 s \$1-buf-read-delay;
 #X obj 124 230 t b f;
 #X obj 325 260 * 250;
@@ -85,15 +83,13 @@ resize \$1 \; \$4-buf-dur-sec \$3 \; \$4-buf-dur-samps \$2 \;;
 #X obj 421 481 outlet;
 #X obj 558 459 tabread \$1-nophase;
 #X obj 566 240 r \$1-nophase-num-points-guarded;
-#X floatatom 566 264 10 0 0 0 - - -;
+#X floatatom 566 264 10 0 0 0 - - - 0;
 #X obj 558 429 f;
 #X obj 558 483 t f b;
 #X obj 558 507 tabwrite \$1-nophase;
 #X msg 622 483 0;
-#X text 51 434 True signal is recorded from indices 1 through buf-dur-samps
-\, (not 0 through buf-dur-samps MINUS 1), f 25;
-#X text 51 514 So the guard points go at 0 \, buf-dur-samps PLUS 1
-\, and buf-dur-samps PLUS 2, f 27;
+#X text 51 434 True signal is recorded from indices 1 through buf-dur-samps \, (not 0 through buf-dur-samps MINUS 1), f 25;
+#X text 51 514 So the guard points go at 0 \, buf-dur-samps PLUS 1 \, and buf-dur-samps PLUS 2, f 27;
 #X obj 207 365 + 1;
 #X obj 67 395 tabwrite \$1-nophase;
 #X obj 67 355 tabread \$1-nophase;
@@ -102,23 +98,19 @@ resize \$1 \; \$4-buf-dur-sec \$3 \; \$4-buf-dur-samps \$2 \;;
 #X obj 117 271 tabread \$1-nophase;
 #X obj 257 281 + 2;
 #X msg 117 241 2;
-#X floatatom 271 311 10 0 0 0 - - -;
-#X floatatom 225 394 10 0 0 0 - - -;
+#X floatatom 271 311 10 0 0 0 - - - 0;
+#X floatatom 225 394 10 0 0 0 - - - 0;
 #X obj 139 172 /;
 #X obj 189 172 samplerate~;
 #X obj 139 146 t f b;
 #X obj 139 196 * 1000;
 #X obj 67 171 delay;
 #X obj 67 205 t b b;
-#X floatatom 166 230 10 0 0 0 - - -;
-#X text 517 80 The first copy point is a copy of the LAST true point
-in the buffer. The final two copy points are copies of the FIRST TWO
-true points in the buffer., f 21;
+#X floatatom 166 230 10 0 0 0 - - - 0;
+#X text 517 80 The first copy point is a copy of the LAST true point in the buffer. The final two copy points are copies of the FIRST TWO true points in the buffer., f 21;
 #X msg 421 447 start 1;
-#X text 446 377 Write to indices 1 through buf-dur-samps (not 0 through
-buf-dur-samps - 1), f 42;
-#X text 13 23 Wait until half the buffer length before copying the
-beginning guard points from the end of the buffer, f 15;
+#X text 446 377 Write to indices 1 through buf-dur-samps (not 0 through buf-dur-samps - 1), f 42;
+#X text 13 23 Wait until half the buffer length before copying the beginning guard points from the end of the buffer, f 15;
 #X obj 139 105 / 2;
 #X obj 341 107 t b b b;
 #X obj 139 81 r \$1-buf-dur-samps;
@@ -183,37 +175,29 @@ beginning guard points from the end of the buffer, f 15;
 #X obj 53 335 tabreceive~ \$1-hann;
 #X obj 17 364 outlet~;
 #X msg 263 54 set \$1 2;
-#X obj 338 437 outlet;
+#X obj 338 447 outlet;
 #X text 106 197 magnitude of FT;
 #X text 393 124 control computations to do every frame;
 #X text 24 385 output phase-aligned frames;
-#X text 356 468 output a bang to start recording;
+#X text 356 478 output a bang to start recording;
 #X obj 17 201 sqrt~;
 #X obj 17 282 /~;
-#X text 442 160 This is just a shortcut to generate alternating +1/-1
-values in a signal buffer since a critically sampled sinusoid starting
-at phase 0 will have those values. It would also work to make an N-point
-array with +1/-1 values in it., f 45;
+#X text 442 160 This is just a shortcut to generate alternating +1/-1 values in a signal buffer since a critically sampled sinusoid starting at phase 0 will have those values. It would also work to make an N-point array with +1/-1 values in it., f 45;
 #X obj 338 265 f;
 #X obj 388 249 + 1;
 #X obj 388 273 %;
 #X obj 338 339 select 0;
-#X floatatom 370 312 5 0 0 0 - - -;
-#X text 51 453 We're dropping the imaginary part (no input to right
-inlet of [rifft~]) \, since we're zeroing phase for every frame.,
-f 32;
+#X floatatom 370 312 5 0 0 0 - - - 0;
+#X text 51 453 We're dropping the imaginary part (no input to right inlet of [rifft~]) \, since we're zeroing phase for every frame., f 32;
 #X obj 263 32 r \$1-window-size;
 #X obj 87 282 r \$1-window-size;
 #X obj 438 273 r \$1-num-buf-blocks;
-#X text 49 233 alternate every other sign to align partials to middle
-of window, f 36;
-#X obj 408 416 delay;
-#X obj 408 440 s \$1-buf-read-reset;
+#X text 49 233 alternate every other sign to align partials to middle of window, f 36;
+#X obj 408 426 delay;
+#X obj 408 450 s \$1-buf-read-reset;
 #X obj 408 370 r \$1-buf-read-delay;
-#X obj 408 391 f;
-#X text 425 300 Start recording to the buffer \, and reset the read
-[phasor~] after a delay so that it lags behind by the desired number
-of ms., f 34;
+#X obj 408 401 f;
+#X text 425 300 Start recording to the buffer \, and reset the read [phasor~] after a delay so that it lags behind by the desired number of ms., f 34;
 #X connect 0 0 23 0;
 #X connect 1 0 23 0;
 #X connect 2 0 4 0;

@@ -1,4 +1,4 @@
-#N canvas 142 241 853 648 10;
+#N canvas 142 241 853 648 12;
 #X obj 55 63 inlet~;
 #X obj 166 63 inlet~;
 #X obj 286 63 inlet~;
@@ -23,14 +23,11 @@
 #X text 115 403 window shaped by raised cos;
 #X text 304 176 weight for next block, f 11;
 #X obj 368 292 +~;
-#X text 445 207 phasor scanner in samples -/+ the read location, f
-26;
+#X text 445 207 phasor scanner in samples -/+ the read location, f 26;
 #X text 135 17 fractional part of loc (blocks), f 16;
 #X text 22 16 grain size (samples), f 11;
 #X obj 93 294 /~;
-#X text 477 530 We're adding this block to what's new in the next block
-\, fading it in using the fractional part of the read location, f
-34;
+#X text 477 530 We're adding this block to what's new in the next block \, fading it in using the fractional part of the read location, f 34;
 #X text 412 449 << what's new in the next block?;
 #X text 282 17 read loc (samples), f 14;
 #X text 575 158 beginning of block;
