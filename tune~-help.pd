@@ -46,7 +46,7 @@
 #X floatatom 192 374 5 0 500 1 cents - - 0;
 #X msg 102 224 amp 0 \$1;
 #X floatatom 102 194 5 0 112 1 dB - - 0;
-#X floatatom 132 254 5 0 359 0 - - - 0;
+#X floatatom 132 254 5 0 0 0 - - - 0;
 #X floatatom 42 54 5 0 0 1 MIDI - - 0;
 #X obj 301 593 loadbang;
 #X floatatom 72 114 5 0 0 0 - - - 0;
@@ -65,8 +65,8 @@
 #X msg 301 623 amp 0 100 \, pan 0 180 \, pitch 0 57 \, spec-shift 0;
 #X floatatom 222 434 5 0 2000 1 ms - - 0;
 #X msg 222 464 delay 0 \$1;
-#X text 258 258 "pan" positions the given voice in the spatial field (0 - 359 degrees), f 54;
 #X text 338 438 delay individual voices to create a rhythmically varied polyphonic texture from monophonic input. maximum delay time is 3000ms.;
+#X text 258 258 "pan" positions the given voice in the spatial field (degrees), f 54;
 #X connect 1 0 0 0;
 #X connect 2 0 0 0;
 #X connect 3 0 2 0;
@@ -158,7 +158,7 @@
 #X obj 842 136 t b f;
 #X obj 842 159 f;
 #X obj 512 193 pack f f;
-#X floatatom 512 106 5 0 359 1 pan - - 0;
+#X floatatom 512 106 5 0 0 1 pan - - 0;
 #X obj 512 136 t b f;
 #X obj 512 159 f;
 #X obj 512 216 list prepend pan;
