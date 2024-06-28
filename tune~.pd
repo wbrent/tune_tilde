@@ -365,7 +365,6 @@
 #X coords 0 -1 1 1 420 180 1 580 55;
 #X restore 385 111 pd command-parsing;
 #X obj 56 131 ./lib/tuneBasher~ \$0;
-#X text 521 50 [tune~] version 0.2.1;
 #X text 521 70 William Brent \, June 2024;
 #X obj 56 185 clone ./lib/tuneReader~ \$1 \$2 \$0;
 #X text 150 65 \$2: number of output channels;
@@ -386,8 +385,9 @@
 #X connect 7 0 5 0;
 #X connect 8 0 4 0;
 #X restore 445 61 pd init;
+#X text 521 50 [tune~] version 0.3.0;
 #X connect 0 0 4 0;
 #X connect 2 0 3 0;
-#X connect 4 0 7 0;
-#X connect 7 0 1 0;
-#X connect 10 0 3 0;
+#X connect 4 0 6 0;
+#X connect 6 0 1 0;
+#X connect 9 0 3 0;
